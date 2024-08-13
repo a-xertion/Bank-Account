@@ -1,0 +1,67 @@
+class BankAccount:
+    def _init_(self, name, balance, number, interest):
+        self.name = name
+        self.balance = balance
+        self.number = number
+        self.interest = interest
+
+def printAccount(self): # printing out account details !!! need to add formatting later
+    return f"Name: {self.name}\nBalance: ${self.balance}\nCredit Card Number: {self.number}\nInterest: {self.interest}"
+
+def addDeposit(self, deposit): # adding deposit to bank account
+    self.balance += deposit
+    print(f"New balance: {self.balance}")
+    
+print("This is the bank...")
+choice = int(input("Are you here for a(n) \n1. deposit\n2. withdrawal\n3. interest\n4. opening an account\nEnter the number: "))
+while(choice < 1 or choice > 4): # ensuring that a valid choice is put
+    print("Invalid option...")
+    choice = int(input("Are you here for a(n) \n1. deposit\n2. withdrawal\n3. interest\n4. opening an account\nEnter the number: "))
+if(choice == 1):
+
+
+# verifying credit card portion
+number = input("Enter your credit card number: ")
+
+if(len(number) != 13 and len(number) != 15 and len(number) != 16):
+    print("INVALID")
+    exit()
+
+# commencing Luhn's Algorithm
+length = len(number)
+if(length % 2 == 1): # odd length
+    every_other = 0 # odd length has different result / every - other than even length numbers
+    num = 1 # num also aids in differentiating even and odd lengths
+else: # even length
+    every_other = 1
+    num = 0
+
+sum = 0
+
+for x in range(length, 0, -1):
+    if((length - x + num) % 2 == every_other):
+        double = 2 * int(number[x - 1 : x])
+        if(double > 9): # numbers doubled > 9, sum += digits of that number doubled == -9
+            double -= 9
+            sum += double
+        else:
+            sum += double # getting 2 * every other digit in number
+    else:
+        sum += int(number[x - 1 : x]) # getting the leftover digits' sum
+
+is_valid = False
+print("\nsum: " + str(sum))
+if(sum % 10 == 0): # Luhn's Algorithm states that if sum % 10 == 0, then credit card is valid
+    is_valid = True
+
+if(is_valid):
+    if(len(number) == 15 and (number[0 : 2] == "34" or number[0 : 2] == "37")):
+        print("AMEX")
+    elif(len(number) == 16 and (number[0 : 2] in {"51", "52", "53", "54", "55"} )):
+        print("MASTERCARD")
+    elif(len(number) == 13 or len(number) == 16 and number[0 : 1] == "4"):
+        print("VISA")
+    else:
+        print("INVALID")
+else:
+    print("INVALID")
