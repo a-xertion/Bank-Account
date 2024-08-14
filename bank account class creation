@@ -1,17 +1,47 @@
+import string
 class BankAccount:
-    def _init_(self, name, balance, number, interest):
-        self.name = name
-        self.balance = balance
+    def _init_(self, name, age, balance, number, interest):
+        self.name = "None"
+        self.age = 0
+        self.balance = 500
+        self.number = "None"
+        self.interest = 0
+
+def setAccount(self):
+    self.name = input("Enter your first and last name: ")
+    self.age = readability()
+    number = input("Enter your credit card number: ")
+    isCredit = validNumber(number) # making sure credit card is real
+    if(isCredit):
         self.number = number
-        self.interest = interest
+    else:
+        self.number = "None"
 
 def printAccount(self): # printing out account details !!! need to add formatting later
     return f"Name: {self.name}\nBalance: ${self.balance}\nCredit Card Number: {self.number}\nInterest: {self.interest}"
 
-def addDeposit(self, deposit): # adding deposit to bank account
-    self.balance += deposit
-    print(f"New balance: {self.balance}")
-    
+def deposit(self, deposit): # adding deposit to bank account
+    if(self.number == "None"):
+        print("You do not have a credit card. You cannot make any deposits. ")
+    else:
+        self.balance += deposit
+        print(f"New balance: {self.balance}")
+
+def withdrawal(self, withdrawal):
+    if(self.number == "None"):
+        print("You do not have a credit card. You cannot make any withdrawals. ")
+        return # exiting the function early
+    if(self.balance < withdrawal):
+        print(f"Your balance of ${self.balance} is insufficient to withdrawal $" + str(withdrawal))
+        want_debt = input("Do you want to borrow money? (Y/N): ")
+        if(want_debt == "Y" or want_debt == "y" or want_debt == "yes" or want_debt == "Yes"):
+            self.balance -= withdrawal # employing withdrawal and 15% interest rates with threats
+            self.interest = 15
+            print(f"You now have a balance of ${self.balance}\nYour interest rate is 15%.\nEvery day you do not pay back your loan, you will have more debt.")
+            print("If your debt gets to $-100.00, your bank account will be banned.")
+        else:
+            print("Withdrawal failed.")
+
 print("This is the bank...")
 choice = int(input("Are you here for a(n) \n1. deposit\n2. withdrawal\n3. interest\n4. opening an account\nEnter the number: "))
 while(choice < 1 or choice > 4): # ensuring that a valid choice is put
@@ -19,49 +49,75 @@ while(choice < 1 or choice > 4): # ensuring that a valid choice is put
     choice = int(input("Are you here for a(n) \n1. deposit\n2. withdrawal\n3. interest\n4. opening an account\nEnter the number: "))
 if(choice == 1):
 
-
-# verifying credit card portion
-number = input("Enter your credit card number: ")
-
-if(len(number) != 13 and len(number) != 15 and len(number) != 16):
-    print("INVALID")
-    exit()
-
-# commencing Luhn's Algorithm
-length = len(number)
-if(length % 2 == 1): # odd length
-    every_other = 0 # odd length has different result / every - other than even length numbers
-    num = 1 # num also aids in differentiating even and odd lengths
-else: # even length
-    every_other = 1
-    num = 0
-
-sum = 0
-
-for x in range(length, 0, -1):
-    if((length - x + num) % 2 == every_other):
-        double = 2 * int(number[x - 1 : x])
-        if(double > 9): # numbers doubled > 9, sum += digits of that number doubled == -9
-            double -= 9
-            sum += double
+def validNumber(number): # method that checks that credit card is real
+    if(len(number) != 13 and len(number) != 15 and len(number) != 16):
+        return False
+    # commencing Luhn's Algorithm
+    length = len(number)
+    if(length % 2 == 1): # odd length
+        every_other = 0 # odd length has different result / every - other than even length numbers
+        num = 1 # num also aids in differentiating even and odd lengths
+    else: # even length
+        every_other = 1
+        num = 0
+    sum = 0
+    for x in range(length, 0, -1):
+        if((length - x + num) % 2 == every_other):
+            double = 2 * int(number[x - 1 : x])
+            if(double > 9): # numbers doubled > 9, sum += digits of that number doubled == -9
+                double -= 9
+                sum += double
+            else:
+                sum += double # getting 2 * every other digit in number
         else:
-            sum += double # getting 2 * every other digit in number
+            sum += int(number[x - 1 : x]) # getting the leftover digits' sum
+    is_valid = False
+    if(sum % 10 == 0): # Luhn's Algorithm states that if sum % 10 == 0, then credit card is valid
+        is_valid = True
+    if(is_valid):
+        return True
+        """ if(len(number) == 15 and (number[0 : 2] == "34" or number[0 : 2] == "37")):
+            print("AMEX")
+        elif(len(number) == 16 and (number[0 : 2] in {"51", "52", "53", "54", "55"} )):
+            print("MASTERCARD")
+        elif(len(number) == 13 or len(number) == 16 and number[0 : 1] == "4"):
+            print("VISA") """
     else:
-        sum += int(number[x - 1 : x]) # getting the leftover digits' sum
+        return False
 
-is_valid = False
-print("\nsum: " + str(sum))
-if(sum % 10 == 0): # Luhn's Algorithm states that if sum % 10 == 0, then credit card is valid
-    is_valid = True
+def readability(): # method that tests what age you are
+    # Coleman-Liau index = 0.0588 * (letters / words * 100) - 0.296 * (sentences / words * 100) - 15.8
+    print("Take this test to determine if you are suitable to open a bank account.")
+    # finding the number of letters in the text
+    text = input("Enter a text for the type of literature you enjoy: ")
+    letterCount = 0
+    wordCount = 1
+    sentenceCount = 0
+    for letter in text:
+        if(letter == " "):
+            wordCount += 1
+        elif(letter.isalpha() or letter.isdigit()):
+            letterCount += 1
+        elif(letter in '.!?'):
+            sentenceCount += 1
 
-if(is_valid):
-    if(len(number) == 15 and (number[0 : 2] == "34" or number[0 : 2] == "37")):
-        print("AMEX")
-    elif(len(number) == 16 and (number[0 : 2] in {"51", "52", "53", "54", "55"} )):
-        print("MASTERCARD")
-    elif(len(number) == 13 or len(number) == 16 and number[0 : 1] == "4"):
-        print("VISA")
+    index = round(0.0588 * (letterCount / wordCount * 100) - 0.296 * (sentenceCount / wordCount * 100) - 15.8)
+
+    if(index < 1):
+        return 0
+    elif(index == 2):
+        return 2
+    elif(index == 3):
+        return 3
+    elif(index == 5):
+        return 5
+    elif(index == 7):
+        return 7
+    elif(index == 8):
+        return 8
+    elif(index == 9):
+        return 9
+    elif(index == 10):
+        return 10
     else:
-        print("INVALID")
-else:
-    print("INVALID")
+        return 16
